@@ -1,0 +1,23 @@
+version: "3"
+services:
+  app:
+    image: auth-app
+    build: .
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - .:/usr/src/app/
+    ports:
+      - 8000:8000
+    environment:
+      - DATABASE_URL=mysql://root:h1d0ct0r@db:3306/auth
+  db:
+    image: mysql:8.0
+    environment:
+      - MYSQL_DATABASE=auth
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_PASSWORD=root
+    ports:
+      - "3306:3306"
+    command: --init-file /data/application/init.sql
+    volumes:
+        - ./config/init.sql:/data/application/init.sql
